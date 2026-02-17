@@ -27,30 +27,24 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-yellow-500/30">
       {/* Header Section */}
-      <header className="py-12 px-4">
-        <h1 className="text-5xl font-black text-center tracking-tighter text-yellow-500 mb-2">
+      <header className="py-12 px-4 text-center">
+        <h1 className="text-5xl font-black tracking-tighter text-yellow-500 mb-2">
           PLOT-TWIST
         </h1>
-        <p className="text-center text-gray-400 text-lg mb-8">
+        <p className="text-gray-400 text-lg mb-8">
           Find your next favorite movie
         </p>
-        {/* Loading Spinner */}
-        {loading && (
-          <div className="flex flex-col items-center justify-center mt-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
-            <p className="mt-4 text-gray-400 animate-pulse">Fetching movies...</p>
-          </div>
-        )}
 
         {/* Search Functionality */}
         <SearchBar onSearch={handleSearch} />
       </header>
 
       <main className="max-w-7xl mx-auto pb-20 px-4">
-        {/* Loading State */}
+        {/* Loading Spinner */}
         {loading && (
-          <div className="flex justify-center mt-20">
+          <div className="flex flex-col items-center justify-center mt-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+            <p className="mt-4 text-gray-400 animate-pulse">Fetching movies...</p>
           </div>
         )}
 
@@ -63,7 +57,7 @@ function App() {
           </div>
         )}
 
-        {/* Movie List Display */}
+        {/* Movie List Display - Only shows if not loading and no error */}
         {!loading && !error && movies.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 animate-in fade-in duration-700">
             {movies.map((movie) => (
@@ -75,12 +69,12 @@ function App() {
         {/* Welcome / Empty State */}
         {!loading && !error && movies.length === 0 && (
           <div className="mt-20 text-center opacity-30">
-            <p className="text-2xl">Start searching to see movie results...</p>
+            <p className="text-2xl font-light italic">Start searching to see movie results...</p>
           </div>
         )}
       </main>
 
-      <footer className="py-10 text-center border-t border-white/5 text-gray-500 text-sm">
+      <footer className="py-10 text-center border-t border-white/5 text-gray-500 text-sm mt-auto">
         <p>© 2026 Plot-Twist Movie Database • Built with React & OMDb</p>
       </footer>
     </div>
