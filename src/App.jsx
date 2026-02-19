@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { searchMovies } from './api';
 import SearchBar from './components/SearchBar';
 import MovieCard from './components/MovieCard';
+import Hero from './components/Hero'; // New Hero component
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -18,7 +19,6 @@ function App() {
       setMovies(data.Search); // Store the list of movies
     } else {
       setMovies([]);
-      // Handle cases where no movies match the search query
       setError(data?.Error || "Something went wrong. Please try again.");
     }
     setLoading(false);
@@ -26,18 +26,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-yellow-500/30">
-      {/* Header Section */}
-      <header className="py-12 px-4 text-center">
-        <h1 className="text-5xl font-black tracking-tighter text-yellow-500 mb-2">
+      {/* 1. Header with Search Bar */}
+      <header className="py-8 px-4 text-center z-20 relative">
+        <h1 className="text-4xl font-black tracking-tighter text-yellow-500 mb-2">
           PLOT-TWIST
         </h1>
-        <p className="text-gray-400 text-lg mb-8">
-          Find your next favorite movie
-        </p>
-
-        {/* Search Functionality */}
+        <p className="text-gray-400 text-sm mb-6">Find your next favorite movie</p>
         <SearchBar onSearch={handleSearch} />
       </header>
+
+      {/* 2. Hero Section - Only show when NOT searching for results to match Figma home */}
+      {movies.length === 0 && !loading && !error && (
+        <Hero />
+      )}
 
       <main className="max-w-7xl mx-auto pb-20 px-4">
         {/* Loading Spinner */}
@@ -57,19 +58,24 @@ function App() {
           </div>
         )}
 
-        {/* Movie List Display - Only shows if not loading and no error */}
+        {/* 3. Movie Results Grid - Only shows if data exists */}
         {!loading && !error && movies.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 animate-in fade-in duration-700">
-            {movies.map((movie) => (
-              <MovieCard key={movie.imdbID} movie={movie} />
-            ))}
+          <div className="mt-10">
+            <h2 className="text-2xl font-bold mb-6 text-yellow-500 uppercase tracking-widest border-l-4 border-yellow-500 pl-4">
+              Search Results
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+              {movies.map((movie) => (
+                <MovieCard key={movie.imdbID} movie={movie} />
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Welcome / Empty State */}
+        {/* Empty State / Welcome Message */}
         {!loading && !error && movies.length === 0 && (
-          <div className="mt-20 text-center opacity-30">
-            <p className="text-2xl font-light italic">Start searching to see movie results...</p>
+          <div className="mt-10 text-center opacity-30">
+            <p className="text-xl font-light italic">Enter a movie title to see more results...</p>
           </div>
         )}
       </main>
