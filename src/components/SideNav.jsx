@@ -1,4 +1,4 @@
-import { Home, Search, Film, Tv, LayoutGrid, PlusCircle } from 'lucide-react';
+import { Home, Search, Film, Tv, LayoutGrid, PlusCircle, Clapperboard } from 'lucide-react';
 
 export default function SideNav({ setView, currentView, isExpanded, setIsExpanded, onSearch }) {
     const menuItems = [
@@ -13,12 +13,22 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
         <nav
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}
-            className={`fixed left-0 top-0 h-full bg-[#050505] border-r border-white/5 flex flex-col py-10 z-[100] transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'
-                }`}
+            className={`fixed left-0 top-0 h-full bg-[#050505] border-r border-white/5 flex flex-col py-10 z-[100] transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
         >
+            {/* 🎬 LOGO: PlotTwist Movie Icon */}
             <div className="px-6 mb-10">
-                <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.4)]">
-                    <span className="text-black font-black italic text-xl">⚡</span>
+                <div
+                    onClick={() => setView('home')}
+                    className="flex items-center gap-3 cursor-pointer group"
+                >
+                    <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.4)] group-hover:scale-110 transition-transform">
+                        <Clapperboard size={22} className="text-black" strokeWidth={3} />
+                    </div>
+                    {isExpanded && (
+                        <span className="text-white font-black uppercase tracking-tighter text-xl italic animate-in fade-in slide-in-from-left-2">
+                            Plot<span className="text-yellow-500">Twist</span>
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -48,6 +58,8 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
                             }`}>
                             {item.label}
                         </span>
+
+                        {/* THE INDICATOR: Shows which menu is active */}
                         {currentView === item.view && (
                             <div className="absolute left-0 w-1 h-6 bg-yellow-500 rounded-r-full shadow-[0_0_10px_#eab308]" />
                         )}

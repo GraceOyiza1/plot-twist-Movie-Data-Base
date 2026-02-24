@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     setTrendingMovies([
-      { Title: "Sinners", Year: "2025", imdbRating: "9.2", Poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg", imdbID: "t1" },
+      { Title: "Inception", Year: "2025", imdbRating: "9.2", Poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg", imdbID: "t1" },
       { Title: "One Battle After Another", Year: "2025", imdbRating: "8.8", Poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg", imdbID: "t2" },
       { Title: "A Quiet Place", Year: "2024", imdbRating: "8.1", Poster: "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM2OTk1NTM@._V1_SX300.jpg", imdbID: "t3" },
       { Title: "Scream 7", Year: "2026", imdbRating: "SOON", Poster: "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_SX300.jpg", imdbID: "t4" }
@@ -55,6 +55,7 @@ function App() {
       />
 
       <main className={`flex-1 transition-all duration-500 ${isNavExpanded ? 'ml-64' : 'ml-20'}`}>
+        {/* --- HOME VIEW --- */}
         {view === 'home' && (
           <div className="animate-in fade-in duration-1000">
             <Hero
@@ -71,7 +72,6 @@ function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
                 {trendingMovies.map(m => (
                   <div key={m.imdbID} className="group flex flex-col cursor-pointer">
-                    {/* Poster with Hover Play Button */}
                     <div className="relative rounded-2xl overflow-hidden border border-white/5 group-hover:border-yellow-500 transition-all duration-500 shadow-2xl aspect-[2/3]">
                       <img src={m.Poster} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={m.Title} />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -84,7 +84,6 @@ function App() {
                       </div>
                     </div>
 
-                    {/* ALWAYS VISIBLE INFO: Back by popular demand! */}
                     <div className="mt-5 px-1 flex flex-col gap-1" onClick={() => { setSelectedMovie(m); setView('details'); }}>
                       <div className="flex justify-between items-start">
                         <span className="text-[11px] font-black uppercase tracking-widest text-gray-300 group-hover:text-yellow-500 transition-colors truncate pr-2">
@@ -103,6 +102,26 @@ function App() {
           </div>
         )}
 
+        {/* --- DYNAMIC VIEWS: Movies, Series, Genre, List --- */}
+        {(view === 'movies' || view === 'series' || view === 'genre' || view === 'list') && (
+          <div className="min-h-screen flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-500">
+            <h2 className="text-6xl md:text-8xl font-black text-white/10 uppercase italic tracking-tighter absolute select-none">
+              {view}
+            </h2>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-black text-yellow-500 uppercase tracking-[0.3em] mb-4">Coming Soon</h3>
+              <p className="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-10">Part of the PlotTwist 2026 Roadmap</p>
+              <button
+                onClick={() => setView('home')}
+                className="px-8 py-3 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+              >
+                Return Home
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* --- SEARCH RESULTS VIEW --- */}
         {view === 'results' && (
           <div className="p-10 md:p-24">
             <h2 className="text-4xl font-black uppercase mb-16 italic border-b border-white/10 pb-6">Library Results</h2>
@@ -120,6 +139,7 @@ function App() {
           </div>
         )}
 
+        {/* --- DETAILS VIEW --- */}
         {view === 'details' && <MovieDetails movie={selectedMovie} onBack={() => setView('home')} />}
       </main>
 
