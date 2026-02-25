@@ -1,4 +1,4 @@
-import { Home, Search, Film, Tv, LayoutGrid, PlusCircle, Clapperboard } from 'lucide-react';
+import { Home, Search, Film, Tv, LayoutGrid, PlusCircle, Clapperboard, Settings } from 'lucide-react';
 
 export default function SideNav({ setView, currentView, isExpanded, setIsExpanded, onSearch }) {
     const menuItems = [
@@ -7,6 +7,7 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
         { icon: <Tv size={22} />, label: 'SERIES', view: 'series' },
         { icon: <LayoutGrid size={22} />, label: 'GENRE', view: 'genre' },
         { icon: <PlusCircle size={22} />, label: 'MY LIST', view: 'list' },
+        { icon: <Settings size={22} />, label: 'SETTINGS', view: 'settings' },
     ];
 
     return (
