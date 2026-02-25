@@ -13,7 +13,7 @@ function App() {
   const [view, setView] = useState('home');
   const [isNavExpanded, setIsNavExpanded] = useState(false);
 
-  // NEW: Theme State for responsiveness and user choice
+  // Theme State for responsiveness and user choice
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
@@ -43,7 +43,11 @@ function App() {
     if (query.length < 3) return;
     setView('results');
     const data = await searchMovies(query);
-    if (data && data.Response === "True") setMovies(data.Search);
+    if (data && data.Response === "True") {
+      setMovies(data.Search);
+    } else {
+      setMovies([]); // Clear movies to trigger the "Not Found" state
+    }
   };
 
   return (
@@ -71,7 +75,6 @@ function App() {
                 Trending Now
               </h2>
 
-              {/* Grid is now fully responsive */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                 {trendingMovies.map(m => (
                   <div key={m.imdbID} className="group flex flex-col cursor-pointer">
@@ -111,7 +114,6 @@ function App() {
             <h2 className={`text-3xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>App Settings</h2>
 
             <div className="max-w-2xl space-y-10">
-              {/* Appearance Toggle */}
               <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-6 ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
                 <div>
                   <h3 className="font-black text-sm tracking-widest uppercase">Appearance</h3>
@@ -133,7 +135,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Language Selection */}
               <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-6 ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
                 <div>
                   <h3 className="font-black text-sm tracking-widest uppercase">Language</h3>
@@ -170,19 +171,61 @@ function App() {
 
         {/* --- SEARCH RESULTS VIEW --- */}
         {view === 'results' && (
-          <div className="p-8 md:p-24">
-            <h2 className="text-2xl md:text-4xl font-black uppercase mb-12 italic border-b border-white/10 pb-6">Library Results</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
-              {movies.map(m => (
-                <div key={m.imdbID} className="group flex flex-col cursor-pointer" onClick={() => openTrailer(m.Title)}>
-                  <div className="relative rounded-xl overflow-hidden border border-white/10">
-                    <img src={m.Poster} className="w-full transition-all group-hover:opacity-50" alt={m.Title} />
-                    <Play fill="yellow" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-yellow-500" size={32} />
+          <div className="p-8 md:p-24 animate-in fade-in duration-700">
+            <h2 className={`text-2xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
+              Library Results
+            </h2>
+
+            {movies.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
+                {movies.map(m => (
+                  <div key={m.imdbID} className="group flex flex-col cursor-pointer" onClick={() => openTrailer(m.Title)}>
+                    <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-xl">
+                      <img
+                        src={m.Poster !== "N/A" ? m.Poster : "https://via.placeholder.com/300x450?text=No+Poster"}
+                        className="w-full h-full object-cover transition-all group-hover:opacity-50"
+                        alt={m.Title}
+                      />
+                      <Play fill="yellow" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-yellow-500" size={32} />
+                    </div>
+                    <span className={`mt-3 text-[10px] font-black uppercase tracking-widest truncate ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{m.Title}</span>
                   </div>
-                  <span className="mt-3 text-[10px] font-black uppercase tracking-widest text-gray-500">{m.Title}</span>
+                ))}
+              </div>
+            ) : (
+              /* --- MOVIE NOT FOUND + RECOMMENDATIONS --- */
+              <div className="animate-in slide-in-from-top-4 duration-700">
+                <div className={`flex flex-col items-center justify-center py-12 text-center border rounded-3xl mb-20 ${isDarkMode ? 'border-white/5 bg-white/[0.02]' : 'border-black/5 bg-black/[0.02]'}`}>
+                  <div className="text-5xl mb-6">🕵️‍♂️</div>
+                  <h3 className="text-xl md:text-2xl font-black text-yellow-500 uppercase tracking-[0.2em] mb-2">Movie Not Found</h3>
+                  <p className="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-8">Check your spelling or try something else.</p>
+
+                  <button
+                    onClick={() => setView('home')}
+                    className={`px-8 py-3 border rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isDarkMode ? 'border-white/10 hover:bg-white hover:text-black' : 'border-black/10 hover:bg-black hover:text-white'}`}
+                  >
+                    Go Back Home
+                  </button>
                 </div>
-              ))}
-            </div>
+
+                <div className="mt-20">
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-gray-500 mb-10 flex items-center gap-4">
+                    <span className="w-12 h-[1px] bg-yellow-500/30"></span>
+                    Suggested For You
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 opacity-80 hover:opacity-100 transition-opacity">
+                    {trendingMovies.map(m => (
+                      <div key={m.imdbID} className="group cursor-pointer" onClick={() => { setSelectedMovie(m); setView('details'); }}>
+                        <div className="relative rounded-lg overflow-hidden aspect-[2/3] border border-white/5">
+                          <img src={m.Poster} className={`w-full h-full object-cover transition-all duration-700 ${isDarkMode ? 'grayscale group-hover:grayscale-0' : ''}`} alt={m.Title} />
+                        </div>
+                        <p className="mt-3 text-[9px] font-black text-gray-600 group-hover:text-yellow-500 uppercase tracking-widest truncate">{m.Title}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
