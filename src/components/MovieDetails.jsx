@@ -1,11 +1,11 @@
 export default function MovieDetails({ movie, onBack }) {
     if (!movie) return null;
 
-    // Custom descriptions based on your list
+    // Custom descriptions 
     const customDescriptions = {
         'inception': 'Critics’ darling sweeping major awards and Oscar buzz. If you like deep character drama with a punch, this one’s speaking prestige cinema realness.',
         'One Battle After Another': 'A critics’ fave from 2025 that’s still rocking conversations for its intense, action-driven storytelling.',
-        'The Moment': 'A quirky A24 mockumentary starring Charli XCX. It’s meta, it’s weird, it’s film-fest flexy.',
+        'The conjurring': 'A quirky A24 mockumentary starring Charli XCX. It’s meta, it’s weird, it’s film-fest flexy.',
         'Scream 7': 'Horror franchise legacy comes back for more with the Ghostface saga — perfect if you live for jump scares and slasher callbacks.'
     };
 

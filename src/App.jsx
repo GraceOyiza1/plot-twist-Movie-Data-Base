@@ -29,7 +29,14 @@ function App() {
     setTrendingMovies([
       { Title: "Inception", Year: "2025", imdbRating: "9.2", Poster: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg", imdbID: "t1" },
       { Title: "One Battle After Another", Year: "2025", imdbRating: "8.8", Poster: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg", imdbID: "t2" },
-      { Title: "A Quiet Place", Year: "2024", imdbRating: "8.1", Poster: "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM2OTk1NTM@._V1_SX300.jpg", imdbID: "t3" },
+      {
+        // FIXED: Using a high-quality TMDB link to ensure the image displays correctly
+        Title: "The Batman",
+        Year: "2022",
+        imdbRating: "7.8",
+        Poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUOpwFVoR5xgrQX0AqB__TnzrmPtDbk9l30LJt78ih0wvfo-CW",
+        imdbID: "t3"
+      },
       { Title: "Scream 7", Year: "2026", imdbRating: "SOON", Poster: "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_SX300.jpg", imdbID: "t4" }
     ]);
   }, []);
