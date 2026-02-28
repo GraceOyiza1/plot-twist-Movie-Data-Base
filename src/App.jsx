@@ -12,6 +12,8 @@ function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [view, setView] = useState('home');
   const [isNavExpanded, setIsNavExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
 
   // Theme State for responsiveness and user choice
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -48,7 +50,9 @@ function App() {
 
   const handleSearch = async (query) => {
     if (query.length < 3) return;
+    setSubmittedQuery(query);
     setView('results');
+    setIsNavExpanded(false); // Close sidebar on mobile after search
     const data = await searchMovies(query);
     if (data && data.Response === "True") {
       setMovies(data.Search);
@@ -65,6 +69,8 @@ function App() {
         isExpanded={isNavExpanded}
         setIsExpanded={setIsNavExpanded}
         onSearch={handleSearch}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
 
       <main className={`flex-1 transition-all duration-500 ${isNavExpanded ? 'ml-64' : 'ml-16 md:ml-20'}`}>
@@ -180,7 +186,7 @@ function App() {
         {view === 'results' && (
           <div className="p-8 md:p-24 animate-in fade-in duration-700">
             <h2 className={`text-2xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
-              Library Results
+              Results for "<span className="text-yellow-500">{submittedQuery}</span>"
             </h2>
 
             {movies.length > 0 ? (

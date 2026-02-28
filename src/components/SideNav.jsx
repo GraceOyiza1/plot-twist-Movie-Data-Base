@@ -1,6 +1,6 @@
 import { Home, Search, Film, Tv, LayoutGrid, PlusCircle, Clapperboard, Settings } from 'lucide-react';
 
-export default function SideNav({ setView, currentView, isExpanded, setIsExpanded, onSearch }) {
+export default function SideNav({ setView, currentView, isExpanded, setIsExpanded, onSearch, searchQuery, setSearchQuery }) {
     const menuItems = [
         { icon: <Home size={22} />, label: 'HOME', view: 'home' },
         { icon: <Film size={22} />, label: 'MOVIES', view: 'movies' },
@@ -9,6 +9,17 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
         { icon: <PlusCircle size={22} />, label: 'MY LIST', view: 'list' },
         { icon: <Settings size={22} />, label: 'SETTINGS', view: 'settings' },
     ];
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        if (e.key === 'Enter' && searchQuery.length >= 3) {
+            onSearch(searchQuery);
+        }
+    };
 
     return (
         <nav
@@ -40,7 +51,9 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
                     <input
                         type="text"
                         placeholder="SEARCH..."
-                        onChange={(e) => onSearch(e.target.value)}
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchSubmit}
                         className={`bg-transparent border-none outline-none text-[10px] font-black tracking-[0.2em] text-white w-full transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}
                     />
                 </div>
@@ -50,7 +63,10 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
                 {menuItems.map((item, index) => (
                     <button
                         key={index}
-                        onClick={() => setView(item.view)}
+                        onClick={() => {
+                            setView(item.view);
+                            setIsExpanded(false); // Close sidebar on menu click for mobile users
+                        }}
                         className={`flex items-center gap-6 px-6 py-4 transition-all group relative ${currentView === item.view ? 'text-yellow-500' : 'text-gray-500 hover:text-white'
                             }`}
                     >
