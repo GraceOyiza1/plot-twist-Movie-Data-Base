@@ -25,7 +25,9 @@ export default function SideNav({ setView, currentView, isExpanded, setIsExpande
         <nav
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}
-            className={`fixed left-0 top-0 h-full bg-[#050505] border-r border-white/5 flex flex-col py-10 z-[100] transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
+            className={`fixed left-0 top-0 h-full bg-[#050505] border-r border-white/5 flex flex-col py-10 z-[100] transition-all duration-300 ease-in-out
+                md:w-20 md:translate-x-0
+                ${isExpanded ? 'w-64 translate-x-0' : 'w-64 -translate-x-full md:translate-x-0'}`}
         >
             {/* 🎬 LOGO: PlotTwist Movie Icon */}
             <div className="px-6 mb-10">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { searchMovies } from './api';
-import { Play, Sun, Moon } from 'lucide-react';
+import { searchMovies, getPopularMovies, getMoviesByGenre, getPopularSeries } from './api';
+import { Play, Sun, Moon, Menu, X } from 'lucide-react';
 import Hero from './components/Hero';
 import MovieDetails from './components/MovieDetails';
 import SideNav from './components/SideNav';
@@ -9,6 +9,9 @@ import VideoModal from './components/VideoModal';
 function App() {
   const [movies, setMovies] = useState([]);
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [seriesData, setSeriesData] = useState([]);
+  const [genreData, setGenreData] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [view, setView] = useState('home');
   const [isNavExpanded, setIsNavExpanded] = useState(false);
@@ -41,6 +44,11 @@ function App() {
       },
       { Title: "Scream 7", Year: "2026", imdbRating: "SOON", Poster: "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_SX300.jpg", imdbID: "t4" }
     ]);
+
+    // Fetch popular movies, series, and genres
+    getPopularMovies().then(setPopularMovies);
+    getPopularSeries().then(setSeriesData);
+    getMoviesByGenre('action').then(setGenreData);
   }, []);
 
   const openTrailer = (title) => {
@@ -73,7 +81,22 @@ function App() {
         setSearchQuery={setSearchQuery}
       />
 
-      <main className={`flex-1 transition-all duration-500 ${isNavExpanded ? 'ml-64' : 'ml-16 md:ml-20'}`}>
+      {/* Mobile Menu Overlay */}
+      {isNavExpanded && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsNavExpanded(false)}
+        />
+      )}
+
+      <main className={`flex-1 transition-all duration-500 w-full md:ml-20`}>
+        {/* Mobile Hamburger Button */}
+        <button
+          onClick={() => setIsNavExpanded(!isNavExpanded)}
+          className="md:hidden fixed top-4 left-4 z-50 bg-yellow-500 text-black p-2 rounded-lg hover:bg-yellow-600 transition"
+        >
+          {isNavExpanded ? <X size={24} /> : <Menu size={24} />}
+        </button>
         {/* --- HOME VIEW --- */}
         {view === 'home' && (
           <div className="animate-in fade-in duration-1000">
@@ -123,7 +146,7 @@ function App() {
 
         {/* --- SETTINGS VIEW --- */}
         {view === 'settings' && (
-          <div className="p-8 md:p-24 animate-in slide-in-from-bottom-5 duration-500">
+          <div className="p-8 md:p-24 pt-20 md:pt-24 animate-in slide-in-from-bottom-5 duration-500">
             <h2 className={`text-3xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>App Settings</h2>
 
             <div className="max-w-2xl space-y-10">
@@ -165,26 +188,45 @@ function App() {
 
         {/* --- DYNAMIC VIEWS: Movies, Series, Genre, List --- */}
         {(view === 'movies' || view === 'series' || view === 'genre' || view === 'list') && (
-          <div className="min-h-screen flex flex-col items-center justify-center text-center p-6 animate-in zoom-in-95 duration-500">
-            <h2 className={`text-5xl md:text-8xl font-black uppercase italic tracking-tighter absolute select-none opacity-10`}>
-              {view}
+          <div className="p-8 md:p-24 pt-20 md:pt-24 animate-in fade-in duration-700">
+            <h2 className={`text-2xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
+              {view === 'movies' && 'Popular Movies'}
+              {view === 'series' && 'Popular Series'}
+              {view === 'genre' && 'Action & Adventure'}
+              {view === 'list' && 'My List'}
             </h2>
-            <div className="relative z-10">
-              <h3 className="text-xl md:text-2xl font-black text-yellow-500 uppercase tracking-[0.3em] mb-4">Coming Soon</h3>
-              <p className="text-gray-500 text-[9px] md:text-[10px] font-bold tracking-widest uppercase mb-10">Part of the PlotTwist 2026 Roadmap</p>
-              <button
-                onClick={() => setView('home')}
-                className={`px-8 py-3 border rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${isDarkMode ? 'border-white/10 hover:bg-white hover:text-black' : 'border-black/10 hover:bg-black hover:text-white'}`}
-              >
-                Return Home
-              </button>
-            </div>
+
+            {(view === 'movies' && popularMovies.length > 0) ||
+              (view === 'series' && seriesData.length > 0) ||
+              (view === 'genre' && genreData.length > 0) ||
+              (view === 'list') ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
+                {(view === 'movies' ? popularMovies : view === 'series' ? seriesData : view === 'genre' ? genreData : []).map(m => (
+                  <div key={m.imdbID} className="group flex flex-col cursor-pointer" onClick={() => { setSelectedMovie(m); setView('details'); }}>
+                    <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-xl aspect-[2/3]">
+                      <img
+                        src={m.Poster !== "N/A" ? m.Poster : "https://via.placeholder.com/300x450?text=No+Poster"}
+                        className="w-full h-full object-cover transition-all group-hover:opacity-50"
+                        alt={m.Title}
+                      />
+                      <Play fill="yellow" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-yellow-500" size={32} />
+                    </div>
+                    <span className={`mt-3 text-[10px] font-black uppercase tracking-widest truncate ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{m.Title}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="min-h-screen flex flex-col items-center justify-center text-center">
+                <h3 className="text-xl md:text-2xl font-black text-yellow-500 uppercase tracking-[0.3em] mb-4">Loading Content</h3>
+                <p className="text-gray-500 text-[10px] font-bold tracking-widest uppercase">Fetching the latest {view}...</p>
+              </div>
+            )}
           </div>
         )}
 
         {/* --- SEARCH RESULTS VIEW --- */}
         {view === 'results' && (
-          <div className="p-8 md:p-24 animate-in fade-in duration-700">
+          <div className="p-8 md:p-24 pt-20 md:pt-24 animate-in fade-in duration-700">
             <h2 className={`text-2xl md:text-4xl font-black uppercase mb-12 italic border-b pb-6 ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
               Results for "<span className="text-yellow-500">{submittedQuery}</span>"
             </h2>

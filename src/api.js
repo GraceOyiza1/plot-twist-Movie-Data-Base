@@ -12,3 +12,49 @@ export const searchMovies = async (title) => {
         return { Response: "False", Error: "Network Error" };
     }
 };
+
+export const getPopularMovies = async () => {
+    const searchTerms = ['action', 'adventure', 'thriller', 'sci-fi', 'drama', 'horror'];
+    const results = [];
+
+    try {
+        for (const term of searchTerms) {
+            const data = await searchMovies(term);
+            if (data.Search) {
+                results.push(...data.Search.slice(0, 2));
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching popular movies:", error);
+    }
+
+    return results.slice(0, 12);
+};
+
+export const getMoviesByGenre = async (genre) => {
+    try {
+        const response = await searchMovies(genre);
+        return response.Search || [];
+    } catch (error) {
+        console.error("Error fetching movies by genre:", error);
+        return [];
+    }
+};
+
+export const getPopularSeries = async () => {
+    const searchTerms = ['series', 'show', 'drama series', 'tv series', 'thriller series'];
+    const results = [];
+
+    try {
+        for (const term of searchTerms) {
+            const data = await searchMovies(term);
+            if (data.Search) {
+                results.push(...data.Search.slice(0, 2));
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching popular series:", error);
+    }
+
+    return results.slice(0, 12);
+};

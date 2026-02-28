@@ -12,8 +12,8 @@ export default function Hero({ title, onWatchTrailer, onViewDetails }) {
             <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/50 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 w-full h-96 bg-gradient-to-t from-[#050505] to-transparent z-10" />
 
-            <div className="relative z-20 h-full flex flex-col justify-center px-10 md:px-24">
-                <h1 className="text-7xl md:text-[130px] font-black mb-2 tracking-tighter uppercase italic leading-[0.8] text-white">
+            <div className="relative z-20 h-full flex flex-col justify-center px-6 md:px-24">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[130px] font-black mb-2 tracking-tighter uppercase italic leading-[0.8] text-white">
                     THE <br /> CONJURING
                 </h1>
 
@@ -23,10 +23,10 @@ export default function Hero({ title, onWatchTrailer, onViewDetails }) {
                     <span className="text-gray-400 border-l border-white/20 pl-6 uppercase">112 MIN</span>
                 </div>
 
-                <div className="flex gap-6">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                     <button
                         onClick={onWatchTrailer}
-                        className="flex items-center gap-3 bg-white text-black px-10 py-5 rounded-full font-black hover:bg-yellow-500 transition-all uppercase tracking-[0.3em] text-[10px] group shadow-2xl"
+                        className="flex items-center justify-center gap-3 bg-white text-black px-10 py-3 sm:py-5 rounded-full font-black hover:bg-yellow-500 transition-all uppercase tracking-[0.3em] text-[10px] group shadow-2xl"
                     >
                         <Play size={16} fill="black" className="group-hover:scale-125 transition-transform" />
                         Watch Trailer
@@ -34,7 +34,7 @@ export default function Hero({ title, onWatchTrailer, onViewDetails }) {
 
                     <button
                         onClick={onViewDetails}
-                        className="bg-white/5 backdrop-blur-md border border-white/20 text-white px-14 py-5 rounded-full font-black hover:bg-white/20 transition-all uppercase tracking-[0.3em] text-[10px]"
+                        className="bg-white/5 backdrop-blur-md border border-white/20 text-white px-10 sm:px-14 py-3 sm:py-5 rounded-full font-black hover:bg-white/20 transition-all uppercase tracking-[0.3em] text-[10px]"
                     >
                         Details
                     </button>
